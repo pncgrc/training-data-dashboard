@@ -1,0 +1,17 @@
+{
+  "name": "training-data-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Personal training dashboard backed by the Garmin Connect Personal API",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node --env-file=.env server/index.js",
+    "check": "node --env-file=.env scripts/check-connection.js"
+  },
+  "dependencies": {
+    "@garmin/fitsdk": "21.218.0"
+  }
+}

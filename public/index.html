@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Training Dashboard</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="page">
+      <div>
+        <h1>Training Dashboard</h1>
+        <div id="status" class="status">Loading…</div>
+      </div>
+      <div class="segmented" id="range" role="group" aria-label="Date range">
+        <button data-weeks="4">4 weeks</button>
+        <button data-weeks="12">12 weeks</button>
+        <button data-weeks="26">26 weeks</button>
+        <button data-weeks="52">52 weeks</button>
+      </div>
+    </header>
+
+    <main id="content">
+      <div class="tiles" id="tiles"></div>
+
+      <section class="card">
+        <div class="card-head">
+          <h2 id="volume-title">Weekly volume</h2>
+          <div class="segmented" id="volume-metric" role="group" aria-label="Chart metric">
+            <button data-metric="hours">Hours</button>
+            <button data-metric="swim">Swim distance</button>
+            <button data-metric="bike">Bike distance</button>
+            <button data-metric="run">Run distance</button>
+          </div>
+        </div>
+        <div class="legend" id="volume-legend"></div>
+        <div class="chart-box"><canvas id="volume-chart" aria-label="Weekly training volume"></canvas></div>
+        <details class="table-view">
+          <summary>Show as table</summary>
+          <div class="table-wrap"><table id="volume-table"></table></div>
+        </details>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Activities</h2>
+          <div class="segmented" id="sport-filter" role="group" aria-label="Sport filter">
+            <button data-sport="all">All</button>
+            <button data-sport="swim">Swim</button>
+            <button data-sport="bike">Bike</button>
+            <button data-sport="run">Run</button>
+            <button data-sport="other">Other</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="activities">
+            <thead>
+              <tr>
+                <th data-sort="date">Date</th>
+                <th data-sort="title">Title</th>
+                <th data-sort="type">Type</th>
+                <th data-sort="distance" class="num">Distance</th>
+                <th data-sort="time" class="num">Time</th>
+                <th data-sort="speed" class="num">Pace / speed</th>
+                <th data-sort="hr" class="num">Avg HR</th>
+                <th data-sort="power" class="num">Power</th>
+                <th data-sort="effect">Training effect</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="/js/overview.js"></script>
+</body>
+</html>

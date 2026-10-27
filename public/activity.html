@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Activity · Training Dashboard</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="page">
+      <div>
+        <a class="back" href="/">← All activities</a>
+        <h1 id="title">Loading…</h1>
+        <div id="subtitle" class="subtitle"></div>
+        <div id="status" class="status"></div>
+      </div>
+    </header>
+
+    <main id="content" hidden>
+      <section class="card">
+        <div class="metrics" id="metrics"></div>
+      </section>
+
+      <section class="card" id="legs-card" hidden>
+        <h2>Legs</h2>
+        <div class="table-wrap"><table id="legs"></table></div>
+      </section>
+
+      <div class="grid-2" id="zones-row">
+        <section class="card" id="hr-zones-card" hidden>
+          <div class="card-head"><h2>Time in heart-rate zones</h2></div>
+          <div class="zones" id="hr-zones"></div>
+        </section>
+        <section class="card" id="power-zones-card" hidden>
+          <div class="card-head"><h2>Time in power zones</h2></div>
+          <div class="zones" id="power-zones"></div>
+        </section>
+        <section class="card" id="peak-power-card" hidden>
+          <div class="card-head"><h2>Peak power (W)</h2></div>
+          <div class="chart-box small"><canvas id="peak-power-chart" aria-label="Peak power by duration"></canvas></div>
+          <details class="table-view">
+            <summary>Show as table</summary>
+            <div class="table-wrap"><table id="peak-power-table"></table></div>
+          </details>
+        </section>
+      </div>
+
+      <section class="card" id="streams-card" hidden>
+        <div class="card-head">
+          <h2>Data over the activity</h2>
+          <div class="segmented" id="x-axis" role="group" aria-label="Horizontal axis">
+            <button data-axis="time">Time</button>
+            <button data-axis="distance">Distance</button>
+          </div>
+        </div>
+        <div id="streams"></div>
+      </section>
+
+      <section class="card" id="laps-card" hidden>
+        <h2 id="laps-title">Laps</h2>
+        <div class="table-wrap"><table id="laps"></table></div>
+      </section>
+
+      <section class="card" id="lengths-card" hidden>
+        <h2>Pool lengths</h2>
+        <div class="table-wrap"><table id="lengths"></table></div>
+      </section>
+
+      <section class="card" id="map-card" hidden>
+        <h2 style="margin-bottom: 12px">Route</h2>
+        <div id="map"></div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="/js/activity.js"></script>
+</body>
+</html>

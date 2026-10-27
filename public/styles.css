@@ -1,0 +1,214 @@
+/* Palette follows the dataviz reference palette; sport colors are categorical
+   slots 1-3, validated for colorblind separation in both themes. */
+:root {
+  --page: #f9f9f7;
+  --surface: #fcfcfb;
+  --text: #0b0b0b;
+  --text-2: #52514e;
+  --muted: #898781;
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.1);
+  --hover: rgba(11, 11, 11, 0.04);
+  --error: #d03b3b;
+  --good: #006300;
+  --swim: #2a78d6;
+  --bike: #eb6834;
+  --run: #1baf7a;
+  --other: #898781;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --text: #f0efec;
+    --text-2: #c3c2b7;
+    --muted: #898781;
+    --grid: #2c2c2a;
+    --axis: #383835;
+    --border: rgba(255, 255, 255, 0.1);
+    --hover: rgba(255, 255, 255, 0.05);
+    --error: #e66767;
+    --good: #0ca30c;
+    --swim: #3987e5;
+    --bike: #d95926;
+    --run: #199e70;
+    --other: #898781;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --page: #0d0d0d;
+  --surface: #1a1a19;
+  --text: #f0efec;
+  --text-2: #c3c2b7;
+  --muted: #898781;
+  --grid: #2c2c2a;
+  --axis: #383835;
+  --border: rgba(255, 255, 255, 0.1);
+  --hover: rgba(255, 255, 255, 0.05);
+  --error: #e66767;
+  --good: #0ca30c;
+  --swim: #3987e5;
+  --bike: #d95926;
+  --run: #199e70;
+  --other: #898781;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  padding: 0 16px 48px;
+  background: var(--page);
+  color: var(--text);
+  font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+a { color: inherit; }
+
+.wrap { max-width: 1200px; margin: 0 auto; }
+
+header.page {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  padding: 24px 0 16px;
+}
+
+h1 { margin: 0; font-size: 1.5rem; font-weight: 600; }
+h2 { margin: 0; font-size: 1rem; font-weight: 600; }
+
+.subtitle { color: var(--text-2); margin-top: 2px; }
+.status { color: var(--muted); }
+.status.error { color: var(--error); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 12px;
+}
+
+/* Segmented control and filter chips */
+.segmented { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+.segmented button {
+  font: inherit;
+  color: var(--text-2);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 12px;
+  cursor: pointer;
+}
+.segmented button:hover { background: var(--hover); }
+.segmented button[aria-pressed="true"] {
+  color: var(--text);
+  border-color: var(--text-2);
+  font-weight: 600;
+}
+
+/* Sport identity: a colored dot beside text, never colored text */
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--sport, var(--other));
+  flex: none;
+}
+.sport-swim { --sport: var(--swim); }
+.sport-bike { --sport: var(--bike); }
+.sport-run { --sport: var(--run); }
+.sport-other { --sport: var(--other); }
+
+/* Stat tiles */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.tiles .card { margin: 0; }
+.tile-label { display: flex; align-items: center; gap: 8px; color: var(--text-2); font-weight: 500; }
+.tile-value { font-size: 1.75rem; font-weight: 600; margin: 4px 0 8px; }
+.tile-stats { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; color: var(--text-2); }
+.tile-stats dt { color: var(--muted); }
+.tile-stats dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Metric grid on the activity page */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px 24px;
+}
+.metric-label { color: var(--muted); font-size: 0.85rem; }
+.metric-value { font-size: 1.25rem; font-weight: 600; }
+.metric-value small { font-size: 0.8rem; font-weight: 400; color: var(--text-2); margin-left: 2px; }
+
+/* Charts */
+.chart-box { position: relative; height: 280px; }
+.chart-box.small { height: 160px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; color: var(--text-2); margin-bottom: 8px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+details.table-view { margin-top: 12px; color: var(--text-2); }
+details.table-view summary { cursor: pointer; }
+
+/* Tables */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+th { color: var(--muted); font-weight: 500; }
+th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
+th[data-sort] { cursor: pointer; user-select: none; }
+th[data-sort]:hover { color: var(--text); }
+th[aria-sort="ascending"]::after { content: " ↑"; }
+th[aria-sort="descending"]::after { content: " ↓"; }
+tbody tr.clickable { cursor: pointer; }
+tbody tr.clickable:hover { background: var(--hover); }
+tbody tr.muted td { color: var(--muted); }
+td.title a { text-decoration: none; font-weight: 500; }
+td.title a:hover { text-decoration: underline; }
+.title-cell { display: inline-flex; align-items: center; gap: 8px; }
+
+/* Zone bars */
+.zones { display: grid; grid-template-columns: auto 1fr auto; gap: 6px 12px; align-items: center; }
+.zone-name { color: var(--text-2); font-variant-numeric: tabular-nums; }
+.zone-name small { color: var(--muted); margin-left: 6px; }
+.zone-track { height: 12px; }
+.zone-bar { height: 100%; min-width: 2px; background: var(--sport, var(--swim)); border-radius: 0 4px 4px 0; }
+.zone-val { color: var(--text-2); text-align: right; font-variant-numeric: tabular-nums; }
+
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; }
+.grid-2 > .card { margin: 0; }
+.grid-2 { margin-bottom: 16px; }
+
+#map { height: 360px; border-radius: 8px; }
+
+.back { color: var(--text-2); text-decoration: none; }
+.back:hover { color: var(--text); }
+
+.empty { color: var(--muted); padding: 8px 0; }
+
+@media (max-width: 480px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .chart-box { height: 220px; }
+}

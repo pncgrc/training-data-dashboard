@@ -1,0 +1,10 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Local data (cached API responses, access token)
+data/
+
+node_modules/
+*.log
