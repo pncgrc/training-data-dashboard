@@ -2,6 +2,7 @@
 
 A personal triathlon dashboard for Garmin Connect data, using the official
 [Garmin Connect Personal API](https://developer.garmin.com/gc-developer-program/personal/personal-api/).
+Built with Next.js, React and TypeScript.
 
 - **Overview:** swim / bike / run totals, weekly volume by sport, and a sortable,
   filterable activity list showing your own activity titles.
@@ -10,6 +11,7 @@ A personal triathlon dashboard for Garmin Connect data, using the official
   - time in HR and power zones, and a peak-power curve
   - synced HR / pace / power / cadence / elevation charts, plotted by time or by distance
   - laps, pool lengths, and a route map
+- **Password login**, so the dashboard can be deployed without exposing your data.
 
 ## Setup
 
@@ -17,7 +19,7 @@ Requires Node 22+.
 
 1. In Garmin Connect Web, open the **Personal API Key** page and create a key.
    It is shown only once, so save it straight away.
-2. Copy `.env.example` to `.env` and set `GARMIN_API_KEY`.
+2. Copy `.env.example` to `.env` and set `GARMIN_API_KEY`, `DASHBOARD_PASSWORD` and `AUTH_SECRET`.
 3. Install dependencies and check that the key works:
    ```sh
    npm install
@@ -25,24 +27,56 @@ Requires Node 22+.
    ```
 4. Start the dashboard and open http://localhost:3000:
    ```sh
-   npm start
+   npm run dev
    ```
+
+Other scripts: `npm run build` / `npm start` (production build), `npm run lint`, `npm run typecheck`.
+
+## Deploying to Vercel
+
+1. Push the repository to GitHub and import it in Vercel. The framework is detected automatically.
+2. Under **Project Settings → Environment Variables**, add `GARMIN_API_KEY`, `GARMIN_API_BASE`,
+   `CACHE_TTL_MINUTES`, `DASHBOARD_PASSWORD` and `AUTH_SECRET` for Production and Preview.
+3. Deploy. Every page and API route requires the login; use a strong password, since the URL is public.
+
+## Project structure
+
+```
+src/
+  app/                 routes: overview (/), /activity?id=, /login, /api/[...route]
+  components/
+    ui/                reusable building blocks (Card, DataTable, SegmentedControl, StatTile, ZoneBars, …)
+    overview/          overview page sections
+    activity/          activity detail sections
+  hooks/               useApi/useAsync, useChart, useColorScheme
+  lib/
+    helpers/           pure functions: formatting, sports, dates, volume, streams, chart scales
+    server/            server-only: Garmin client, FIT parsing, cache, API routes, auth
+  types/               Garmin response and stream types
+  proxy.ts             redirects to /login without a valid session
+```
+
+Each component keeps its styles in a CSS Module beside it (`Name.module.css`).
+Theme colors and dark mode are CSS variables in `src/app/globals.css`.
 
 ## How it works
 
-- `server/garmin.js` exchanges the API key for a 24-hour access token and calls the API.
+- `lib/server/garmin.ts` exchanges the API key for a 24-hour access token and calls the API.
   There are no refresh tokens, so it requests a new token with the key when the old one expires.
-- `server/fit.js` unzips each activity's original `.fit` file (from the download endpoint) and decodes it with
+- `lib/server/fit.ts` unzips each activity's original `.fit` file (from the download endpoint) and decodes it with
   Garmin's [`@garmin/fitsdk`](https://www.npmjs.com/package/@garmin/fitsdk). It turns the file into
   downsampled time series, laps and pool lengths.
-- `server/cache.js` caches responses in `data/cache/`. Activity lists stay fresh for 60 minutes
-  (set by `CACHE_TTL_MINUTES`). Activity details and files are kept for a year, since they don't change.
-  Add `?refresh` to an `/api/...` URL to bypass the cache.
-- `server/index.js` serves `public/` and the `/api/*` routes below.
-- `public/` is plain JS modules. Chart.js and Leaflet load from cdnjs, and map tiles come from OpenStreetMap.
+- `lib/server/cache.ts` caches responses in Next's data cache (`.next/cache` locally, Vercel's Data Cache
+  when deployed). Activity lists stay fresh for 60 minutes (set by `CACHE_TTL_MINUTES`). Activity details
+  and files are kept for a year, since they don't change. Add `?refresh` to an `/api/...` URL to refetch.
+- `lib/server/auth.ts` checks the password and signs the session cookie with `AUTH_SECRET`.
+  `proxy.ts` and the API route both verify it.
+- Chart.js draws the charts; Leaflet draws the map with OpenStreetMap tiles.
 - `docs/garmin-personal-api.openapi.json` is the full API spec, taken from Garmin's Swagger docs page.
 
 ## API routes
+
+All routes require a logged-in session.
 
 | Route | Source |
 | --- | --- |
@@ -72,4 +106,4 @@ Dates are `YYYY-MM-DD`.
 
 - Personal use only, per Garmin's terms.
 - API keys expire after 30, 90, or 180 days or 1 year, depending on what you choose.
-  When yours expires, create a new key and update `.env`.
+  When yours expires, create a new key and update `.env` (and the Vercel environment variable).

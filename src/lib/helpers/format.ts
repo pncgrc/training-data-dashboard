@@ -1,0 +1,68 @@
+// Formatting helpers. Units are metric, matching the Garmin profile setting.
+
+import { parseLocal } from './dates';
+import type { Sport } from './sports';
+
+export const DASH = '—';
+const pad = (n: number) => String(n).padStart(2, '0');
+
+type Num = number | null | undefined;
+
+export function fmtDuration(s: Num) {
+  if (s == null || Number.isNaN(s)) return DASH;
+  s = Math.round(s);
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+  return h ? `${h}:${pad(m)}:${pad(sec)}` : `${m}:${pad(sec)}`;
+}
+
+// Long durations for totals, e.g. "12h 05m".
+export function fmtHours(s: Num) {
+  if (!s) return '0h';
+  const h = Math.floor(s / 3600), m = Math.round((s % 3600) / 60);
+  return h ? `${h}h ${pad(m)}m` : `${m}m`;
+}
+
+// Swims are measured in metres; everything else in kilometres.
+export function fmtDistance(m: Num, sport: Sport) {
+  if (!m) return DASH;
+  if (sport === 'swim') return `${Math.round(m).toLocaleString()} m`;
+  return `${(m / 1000).toFixed(m >= 100000 ? 0 : 1)} km`;
+}
+
+// Pace for swim (/100 m) and run (/km); speed for everything else (km/h).
+export function paceUnit(sport: Sport) {
+  return sport === 'swim' ? '/100m' : sport === 'run' ? '/km' : 'km/h';
+}
+
+export const isPaceSport = (sport: Sport) => sport === 'swim' || sport === 'run';
+
+export function paceValue(speed: Num, sport: Sport) {
+  if (!speed || speed <= 0) return null;
+  if (sport === 'swim') return 100 / speed; // seconds per 100 m
+  if (sport === 'run') return 1000 / speed; // seconds per km
+  return speed * 3.6; // km/h
+}
+
+export function fmtPace(speed: Num, sport: Sport, { unit = true } = {}) {
+  const v = paceValue(speed, sport);
+  if (v == null) return DASH;
+  const text = isPaceSport(sport) ? fmtDuration(v) : v.toFixed(1);
+  return unit ? `${text} ${paceUnit(sport)}` : text;
+}
+
+export const fmtNum = (v: Num, digits = 0, suffix = '') =>
+  v == null || Number.isNaN(v) ? DASH : `${Number(v).toFixed(digits)}${suffix}`;
+
+export function fmtDate(local: string | null | undefined) {
+  if (!local) return DASH;
+  return parseLocal(local).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+export function fmtDateTime(local: string | null | undefined) {
+  if (!local) return DASH;
+  return `${fmtDate(local)}, ${parseLocal(local).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`;
+}
+
+// "AEROBIC_BASE" -> "Aerobic base"
+export const fmtLabel = (s: string | null | undefined) =>
+  s && s !== 'UNKNOWN' ? s.toLowerCase().replace(/_/g, ' ').replace(/^\w/, (c) => c.toUpperCase()) : DASH;

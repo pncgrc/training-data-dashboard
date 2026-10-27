@@ -1,0 +1,36 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--gap);
+}
+
+.label {
+  color: var(--text-2);
+  font-weight: 500;
+}
+
+.value {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 4px 0 8px;
+}
+
+.stats {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  color: var(--text-2);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.row dt { color: var(--muted); }
+
+.row dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}

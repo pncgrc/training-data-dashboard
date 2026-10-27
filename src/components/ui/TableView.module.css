@@ -1,0 +1,6 @@
+.details {
+  margin-top: 12px;
+  color: var(--text-2);
+}
+
+.summary { cursor: pointer; }

@@ -1,0 +1,10 @@
+.box {
+  position: relative;
+  height: 280px;
+}
+
+.small { height: 160px; }
+
+@media (max-width: 480px) {
+  .box:not(.small) { height: 220px; }
+}
