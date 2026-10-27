@@ -71,7 +71,8 @@ export function VolumeChart({ activities, weeks }: { activities: Activity[]; wee
           tooltip: {
             filter: (item) => Number(item.raw) > 0,
             callbacks: {
-              title: (items) => `Week of ${items[0].label}`,
+              // The filter leaves no items for empty weeks; Chart.js still calls title, then hides the tooltip.
+              title: (items) => (items.length ? `Week of ${items[0].label}` : ''),
               label: (item) => ` ${item.dataset.label}: ${fmt(Number(item.raw))}`,
               footer: (items) => (items.length > 1 ? `Total: ${fmt(items.reduce((s, i) => s + Number(i.raw), 0))}` : ''),
             },

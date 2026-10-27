@@ -4,6 +4,9 @@ A personal triathlon dashboard for Garmin Connect data, using the official
 [Garmin Connect Personal API](https://developer.garmin.com/gc-developer-program/personal/personal-api/).
 Built with Next.js, React and TypeScript.
 
+> **Note:** This is a vibecoded app, built largely with AI assistance, and intended for personal use only.
+> It isn't maintained as a general-purpose product; use it as inspiration or a starting point at your own risk.
+
 - **Overview:** swim / bike / run totals, weekly volume by sport, and a sortable,
   filterable activity list showing your own activity titles.
 - **Activity detail** (click any activity):
